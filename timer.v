@@ -11,14 +11,14 @@ module timer(
     wire [5:0] next;
     
     initial begin
-        current = 6'b000000
+        current = 6'b000000;
     
     always (@posedge load)
         current = load_value;
         next = current - 1;
 
     always (@posedge rst)
-          current = 6'b000000  
+          current = 6'b000000;  
     always (@posedge clk)
         if (en)
             current = next;
@@ -30,7 +30,7 @@ module timer(
         .clk(clk),
         .reset(rst),
         .Q(state[0])
-    )
+    );
 
     dff d1(
         .Default(1'b0),
@@ -38,7 +38,7 @@ module timer(
         .clk(clk),
         .reset(rst),
         .Q(state[1])
-    )
+    );
 
     dff d2(
         .Default(1'b0),
@@ -46,7 +46,7 @@ module timer(
         .clk(clk),
         .reset(rst),
         .Q(state[2])
-    )
+    );
 
     dff d3(
         .Default(1'b0),
@@ -54,7 +54,7 @@ module timer(
         .clk(clk),
         .reset(rst),
         .Q(state[3])
-    )
+    );
 
     dff d4(
         .Default(1'b0),
@@ -62,7 +62,7 @@ module timer(
         .clk(clk),
         .reset(rst),
         .Q(state[4])
-    )
+    );
 
     dff d5(
         .Default(1'b0),
@@ -70,7 +70,7 @@ module timer(
         .clk(clk),
         .reset(rst),
         .Q(state[5])
-    )
+    );
 
     assign state = current;
             
