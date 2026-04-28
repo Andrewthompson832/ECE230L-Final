@@ -5,28 +5,32 @@ module timer(
     input en,               //Enables or Disables clock
     input load,             //If load=1, load the counter with "load_value"
     input [5:0] load_value, //Value to load into counter register. Counter will then start counting from this value
-    output [5:0] state     //6-bits to represent the highest number 59
+    output [5:0] state    //6-bits to represent the highest number 59
 );
-    wire [5:0] current;
-    wire [5:0] next;
-    
-    initial begin
-        current = 6'b000000;
-    
-    always (@posedge load)
-        current = load_value;
-        next = current - 1;
 
-    always (@posedge rst)
-          current = 6'b000000;  
-    always (@posedge clk)
+    reg [5:0] current;
+    wire D0, D1, D2, D3, D4, D5;
+    
+    always @(posedge load) begin
+        current <= load_value;
+    end
+    
+    always @(posedge clk) begin
         if (en)
-            current = next;
-            next = current - 1;
+            if(current[0] | current[1] | current[2] | current[3] | current[4] | current[5]) 
+                current[0] <= ~current[0];
+     end
+     
+     assign D0 = current[0];
+     assign D1 = current[1] ^ current[0];
+     assign D2 = current[2] ^ (~current[1] & current[0]);    
+     assign D3 = current[3] ^ (~current[2] & ~current[1] & current[0]);
+     assign D4 = current[4] ^ (~current[3] & ~current[2] & ~current[1] & current[0]);
+     assign D5 = current[5] ^ (~current[4] & ~current[3] & ~current[2] & ~current[1] & current[0]);
 
     dff d0(
         .Default(1'b0),
-        .D(current[0]),
+        .D(D0),
         .clk(clk),
         .reset(rst),
         .Q(state[0])
@@ -34,7 +38,7 @@ module timer(
 
     dff d1(
         .Default(1'b0),
-        .D(current[1]),
+        .D(D1),
         .clk(clk),
         .reset(rst),
         .Q(state[1])
@@ -42,7 +46,7 @@ module timer(
 
     dff d2(
         .Default(1'b0),
-        .D(current[2]),
+        .D(D2),
         .clk(clk),
         .reset(rst),
         .Q(state[2])
@@ -50,7 +54,7 @@ module timer(
 
     dff d3(
         .Default(1'b0),
-        .D(current[3]),
+        .D(D3),
         .clk(clk),
         .reset(rst),
         .Q(state[3])
@@ -58,7 +62,7 @@ module timer(
 
     dff d4(
         .Default(1'b0),
-        .D(current[4]),
+        .D(D4),
         .clk(clk),
         .reset(rst),
         .Q(state[4])
@@ -66,13 +70,11 @@ module timer(
 
     dff d5(
         .Default(1'b0),
-        .D(current[5]),
+        .D(D5),
         .clk(clk),
         .reset(rst),
         .Q(state[5])
     );
-
-    assign state = current;
             
 
 endmodule
