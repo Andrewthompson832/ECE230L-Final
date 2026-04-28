@@ -59,5 +59,13 @@ stopwatch stop(
 //Timer Module Instance
 //Use "clk_1Hz" as clock signal to stopwatch and timer modules
 
+timer time(
+    .clk(clk_1Hz),
+    .rst(btnC),
+    .en(sw[1]),
+    .load(sw[2]),
+    .load_value(sw[15:10]),
+    .state(led[8:3])
+);
 
 endmodule
